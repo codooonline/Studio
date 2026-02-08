@@ -1,3 +1,17 @@
+
+None selected
+
+Skip to content
+Using University of the Philippines Mail with screen readers
+
+1 of 3,156
+(no subject)
+Inbox
+
+Aimray Gatungay <ahgatungay@up.edu.ph>
+6:24 PM (0 minutes ago)
+to me
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,8 +49,8 @@ body {
   font-size: 48px;
 }
 
-#intro .co { color: #00e5ff; }
-#intro .doo { color: #00ff88; }
+.co { color: #00e5ff; }
+.doo { color: #00ff88; }
 
 @keyframes introFade {
   0% { opacity: 1; }
@@ -50,7 +64,7 @@ body {
   display: flex;
   flex-direction: column;
   transform: translateY(-100vh);
-  animation: dropIn 0.9s cubic-bezier(.17,.67,.38,1.4) forwards;
+  animation: dropIn 0.25s ease-out forwards;
   animation-delay: 3.2s;
 }
 
@@ -71,9 +85,6 @@ body {
   font-size: 18px;
   font-weight: bold;
 }
-
-.logo .co { color: #00e5ff; }
-.logo .doo { color: #00ff88; }
 
 .actions {
   margin-left: auto;
@@ -115,15 +126,18 @@ textarea {
 /* ---------- RUN PANEL ---------- */
 .run-panel {
   height: 35%;
+  min-height: 120px;
+  max-height: 80%;
   display: none;
   flex-direction: column;
   background: #fff;
 }
 
 .run-drag {
-  height: 12px;
+  height: 14px;
   background: #ccc;
   cursor: ns-resize;
+  touch-action: none;
 }
 
 .run-header {
@@ -175,7 +189,7 @@ iframe {
 <h1>Hello Codoo</h1>
 
 <script>
-document.body.onclick = () => alert("Running real JS 😏");
+document.body.onclick = () => alert("This is real JS running 👀");
 </script>
 
 </body>
@@ -215,15 +229,27 @@ function copyCode() {
   );
 }
 
-/* DRAG RESIZE */
-dragBar.addEventListener("pointerdown", () => dragging = true);
+/* FIXED DRAG LOGIC */
+dragBar.addEventListener("pointerdown", e => {
+  dragging = true;
+  dragBar.setPointerCapture(e.pointerId);
+});
+
 window.addEventListener("pointerup", () => dragging = false);
+
 window.addEventListener("pointermove", e => {
   if (!dragging) return;
-  const h = window.innerHeight - e.clientY;
-  if (h > 100 && h < window.innerHeight - 100) {
-    runPanel.style.height = h + "px";
-  }
+
+  const viewport = window.innerHeight;
+  let newHeight = viewport - e.clientY;
+
+  const min = 120;
+  const max = viewport * 0.8;
+
+  if (newHeight < min) newHeight = min;
+  if (newHeight > max) newHeight = max;
+
+  runPanel.style.height = newHeight + "px";
 });
 
 /* SIMPLE EMMET */
@@ -250,4 +276,3 @@ document.getElementById("code").addEventListener("keydown", e => {
 
 </body>
 </html>
-
