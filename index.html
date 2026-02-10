@@ -1,34 +1,85 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Codoo</title>
+<title>Codoo 2.0</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{height:100vh;font-family:system-ui,sans-serif;background:#0b0b0b;color:#eaeaea;overflow:hidden;display:flex;flex-direction:column;}
-.topbar{height:48px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid #222;}
-.logo{font-family:Consolas,monospace;font-weight:bold;font-size:16px;}
-.actions{margin-left:auto;display:flex;gap:8px;}
-.btn{background:#141414;color:#eaeaea;border:1px solid #2a2a2a;padding:6px 12px;cursor:pointer;border-radius:4px;}
-.btn:hover{background:#1d1d1d;}
-.symbol-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0;border-radius:4px;}
-#editor{flex:1;}
-#runOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:50;opacity:0;transition:opacity 1s ease;}
+/* ===== BASE ===== */
+* { box-sizing:border-box; }
+body {
+  margin:0; font-family:system-ui,sans-serif; background:#0b0b0b; color:#eaeaea;
+  height:100vh; overflow:hidden; display:flex; flex-direction:column;
+}
+button{font-family:inherit; cursor:pointer;}
+/* ===== TOP BAR ===== */
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  height:50px; padding:0 12px; border-bottom:1px solid #222;
+}
+.logo{font-family:Consolas,monospace;font-weight:bold;font-size:18px;}
+.actions{display:flex; gap:6px; align-items:center;}
+.btn{
+  background:#141414; color:#eaeaea; border:1px solid #2a2a2a; padding:5px 10px;
+  border-radius:4px; transition:0.2s; box-shadow:0 2px 5px rgba(0,0,0,0.3);
+}
+.btn:hover{background:#1d1d1d; box-shadow:0 4px 10px rgba(0,0,0,0.4);}
+.btn-small{padding:3px 6px; font-size:12px;}
+/* ===== TEMPLATES ICON ===== */
+#templateBtn{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  border-radius:8px; padding:6px; font-weight:bold;
+  background:#141414; border:2px solid #2a2a2a;
+}
+#templateBtn:hover{background:#1d1d1d;}
+#templateIcon{
+  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  border:2px solid #eaeaea; font-weight:bold; font-size:14px;
+  border-radius:4px;
+}
+/* ===== EDITOR ===== */
+#editor{flex:1; width:100%;}
+/* ===== RUN OVERLAY ===== */
+#runOverlay{
+  position:fixed; inset:0; background:rgba(0,0,0,0.6);
+  display:none; flex-direction:column; justify-content:flex-start; align-items:center;
+  z-index:50; opacity:0; transition:opacity 1s;
+}
 #runOverlay.show{display:flex;}
 #runOverlay.visible{opacity:1;}
-.runPanel{width:92%;max-width:900px;height:80%;background:#fff;display:flex;flex-direction:column;border-radius:6px;overflow:hidden;}
-.runHeader{background:#111;color:#fff;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;}
-iframe{flex:1;border:none;}
-#templatesBtn{display:flex;align-items:center;gap:6px;background:#141414;color:#eaeaea;padding:6px 12px;border-radius:8px;border:1px solid #2a2a2a;cursor:pointer;}
-#templatesBtn:hover{background:#1d1d1d;}
-#templatesPanel{position:fixed;top:52px;left:10px;width:90%;max-width:350px;max-height:70%;background:#141414;color:#eaeaea;border:1px solid #2a2a2a;border-radius:6px;overflow-y:auto;display:none;flex-direction:column;padding:10px;z-index:60;box-shadow:0 0 12px rgba(0,0,0,0.5);}
-.template-category{font-weight:bold;margin:6px 0 4px;}
-.template-item{background:#1a1a1a;padding:6px 10px;margin:2px 0;border-radius:4px;cursor:pointer;}
-.template-item:hover{background:#222;}
-@media(max-width:600px){#templatesPanel{top:50px;left:5px;width:95%;max-width:none;max-height:60%;} .runPanel{width:95%;height:75%;}}
+.runPanel{
+  width:92%; max-width:900px; height:80%; background:#ffffff;
+  display:flex; flex-direction:column; border-radius:6px; overflow:hidden;
+}
+.runHeader{
+  background:#111; color:#fff; padding:8px 10px; display:flex;
+  justify-content:space-between; align-items:center;
+}
+iframe{flex:1; border:none;}
+/* ===== TEMPLATES PANEL ===== */
+#templateOverlay{
+  position:fixed; inset:0; background:rgba(0,0,0,0.7);
+  display:none; flex-direction:column; justify-content:center; align-items:center;
+  z-index:40; opacity:0; transition:opacity 0.3s;
+}
+#templateOverlay.show{display:flex;}
+#templateOverlay.visible{opacity:1;}
+.templatePanel{
+  width:90%; max-width:600px; background:#141414; border-radius:8px; padding:12px;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  max-height:70%; overflow-y:auto;
+}
+.templateCard{
+  background:#1a1a1a; border:1px solid #2a2a2a; border-radius:6px;
+  padding:10px; cursor:pointer; transition:0.2s; font-family:Consolas,monospace;
+}
+.templateCard:hover{background:#222; transform:translateY(-2px);}
+.templateCard code{font-size:12px; display:block; white-space:pre-wrap;}
 </style>
 
+<!-- Monaco Loader -->
 <script src="https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js"></script>
 </head>
 <body>
@@ -36,24 +87,31 @@ iframe{flex:1;border:none;}
 <div class="topbar">
   <div class="logo">Codoo</div>
   <div class="actions">
-    <button class="symbol-btn btn" id="undoBtn">&#x2190;</button>
-    <button class="symbol-btn btn" id="redoBtn">&#x2192;</button>
-    <button class="btn" id="templatesBtn">&#x3C;/&#x3E; Templates</button>
-    <button class="btn" onclick="copyCode()">Copy</button>
-    <button class="btn" onclick="runCode()">Run</button>
+    <button class="btn" id="undoBtn" title="Undo">⟲</button>
+    <button class="btn" id="redoBtn" title="Redo">⟳</button>
+    <button class="btn" id="copyBtn">Copy</button>
+    <button class="btn" id="runBtn">Run</button>
+    <button id="templateBtn"><div id="templateIcon">&lt;/&gt;</div>Templates</button>
   </div>
 </div>
 
-<div id="templatesPanel"></div>
 <div id="editor"></div>
 
+<!-- RUN OVERLAY -->
 <div id="runOverlay">
   <div class="runPanel">
     <div class="runHeader">
       <span>Output</span>
-      <button class="btn" onclick="closeRun()">Close</button>
+      <button class="btn btn-small" onclick="closeRun()">Close</button>
     </div>
     <iframe id="output"></iframe>
+  </div>
+</div>
+
+<!-- TEMPLATE OVERLAY -->
+<div id="templateOverlay">
+  <div class="templatePanel" id="templatePanel">
+    <!-- JS will populate templates -->
   </div>
 </div>
 
@@ -66,108 +124,112 @@ require(['vs/editor/editor.main'], () => {
 <html>
 <body style="background:#111;color:white;font-family:sans-serif">
 <h1>Hello World</h1>
-<script>console.log("Hello World")<\/script>
+<input placeholder="Type something">
+<script>
+document.querySelector("input").oninput = e => console.log(e.target.value);
+</script>
 </body>
 </html>`,
-    language:'html',
-    theme:'vs-dark',
-    automaticLayout:true,
+    language: 'html',
+    theme: 'vs-dark',
+    automaticLayout: true,
     fontSize:14,
     minimap:{enabled:false},
     wordWrap:'on',
-    autoClosingBrackets:'always',
-    autoClosingQuotes:'always'
+    autoClosingBrackets: true,
+    autoClosingQuotes: true
   });
 });
 
+/* ===== RUN ===== */
 function runCode(){
-  const overlay=document.getElementById('runOverlay');
+  const overlay = document.getElementById('runOverlay');
   overlay.classList.add('show');
   requestAnimationFrame(()=>overlay.classList.add('visible'));
-  document.getElementById('output').srcdoc=editor.getValue();
+  document.getElementById('output').srcdoc = editor.getValue();
 }
 function closeRun(){
-  const overlay=document.getElementById('runOverlay');
+  const overlay = document.getElementById('runOverlay');
   overlay.classList.remove('visible');
   setTimeout(()=>overlay.classList.remove('show'),1000);
 }
-function copyCode(){navigator.clipboard.writeText(editor.getValue());}
-document.getElementById('undoBtn').onclick=()=>editor.trigger('keyboard','undo',null);
-document.getElementById('redoBtn').onclick=()=>editor.trigger('keyboard','redo',null);
+
+/* ===== COPY ===== */
+document.getElementById('copyBtn').onclick = ()=>navigator.clipboard.writeText(editor.getValue());
+
+/* ===== UNDO/REDO ===== */
+document.getElementById('undoBtn').onclick = ()=>editor.undo();
+document.getElementById('redoBtn').onclick = ()=>editor.redo();
 
 /* ===== TEMPLATES ===== */
-const templates={
-  "HTML":[
-`<!DOCTYPE html>
+const templates = [
+  {name:"HTML Hello", code:`<!DOCTYPE html>
 <html>
-<body>
+<body style="background:#111;color:white;font-family:sans-serif">
 <h1>Hello World</h1>
-<p>Paragraph example</p>
 </body>
-</html>`,
-`<!DOCTYPE html>
+</html>`},
+  {name:"CSS Hello", code:`<!DOCTYPE html>
 <html>
-<body>
+<body style="background:#111;color:white;font-family:sans-serif">
+<h1 style="color:#fff;font-family:sans-serif">Hello World</h1>
+<style>
+body{margin:0;padding:10px;background:#111;color:white;font-family:sans-serif;}
+h1{color:#eaeaea;}
+</style>
+</body>
+</html>`},
+  {name:"JS Hello", code:`<!DOCTYPE html>
+<html>
+<body style="background:#111;color:white;font-family:sans-serif">
 <h1>Hello World</h1>
-<ul>
-<li>Item 1</li>
-<li>Item 2</li>
-</ul>
-</body>
-</html>`
-],
-  "CSS":[
-`<!DOCTYPE html>
-<html>
-<body>
-<h1 style="color:white;background:black;">Hello World</h1>
-<style>body{background:#111;color:white}</style>
-</body>
-</html>`,
-`<!DOCTYPE html>
-<html>
-<body>
-<p style="color:gray">Hello World</p>
-<style>p{font-size:18px}</style>
-</body>
-</html>`
-],
-  "JS":[
-`<!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<script>console.log("Hello World")<\/script>
-</body>
-</html>`,
-`<!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<script>alert("Hello World")<\/script>
-</body>
-</html>`
-]
-};
-const templatesPanel=document.getElementById('templatesPanel');
-const templatesBtn=document.getElementById('templatesBtn');
-templatesBtn.onclick=()=>{templatesPanel.style.display=templatesPanel.style.display==='flex'?'none':'flex';renderTemplates();};
-function renderTemplates(){
-  templatesPanel.innerHTML='';
-  for(const cat in templates){
-    const catEl=document.createElement('div');
-    catEl.className='template-category';
-    catEl.textContent=cat;
-    templatesPanel.appendChild(catEl);
-    templates[cat].forEach(t=>{
-      const tBtn=document.createElement('div');
-      tBtn.className='template-item';
-      tBtn.textContent='Template';
-      tBtn.onclick=()=>{editor.setValue(t); templatesPanel.style.display='none';};
-      templatesPanel.appendChild(tBtn);
-    });
-  }
-}
+<script>
+console.log("Hello World");
 </script>
+</body>
+</html>`},
+  {name:"HTML Form", code:`<!DOCTYPE html>
+<html>
+<body style="background:#111;color:white;font-family:sans-serif">
+<h1>Hello World</h1>
+<form><input placeholder="Name"><button>Submit</button></form>
+</body>
+</html>`},
+  {name:"JS Button", code:`<!DOCTYPE html>
+<html>
+<body style="background:#111;color:white;font-family:sans-serif">
+<h1>Hello World</h1>
+<button onclick="alert('Hello!')">Click Me</button>
+</body>
+</html>`}
+];
+
+const templatePanel = document.getElementById('templatePanel');
+templates.forEach(t=>{
+  const card = document.createElement('div');
+  card.className='templateCard';
+  card.innerHTML=`<strong>${t.name}</strong><code>${t.code}</code>`;
+  card.onclick=()=>{
+    editor.setValue(t.code);
+    closeTemplate();
+  };
+  templatePanel.appendChild(card);
+});
+
+const templateBtn = document.getElementById('templateBtn');
+const templateOverlay = document.getElementById('templateOverlay');
+templateBtn.onclick=()=>{
+  templateOverlay.classList.add('show');
+  requestAnimationFrame(()=>templateOverlay.classList.add('visible'));
+};
+function closeTemplate(){
+  templateOverlay.classList.remove('visible');
+  setTimeout(()=>templateOverlay.classList.remove('show'),300);
+}
+templateOverlay.onclick=(e)=>{
+  if(e.target===templateOverlay) closeTemplate();
+};
+</script>
+
 </body>
 </html>
