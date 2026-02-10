@@ -3,123 +3,175 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Codoo</title>
+
 <style>
+/* ===== BASE ===== */
+* { box-sizing: border-box; }
 body {
-  margin:0; font-family:system-ui,sans-serif;
-  background:#0f0f0f; color:#eaeaea;
-  overflow:hidden; height:100vh;
+  margin: 0;
+  background: #0b0b0b;
+  color: #eaeaea;
+  height: 100vh;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
 }
 
-/* Intro */
-#intro {
-  position:fixed; inset:0;
-  display:flex; justify-content:center; align-items:center;
-  background:#0f0f0f; z-index:999;
-  animation:introFade 3.2s forwards;
+/* ===== TOP BAR ===== */
+.topbar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 1px solid #222;
 }
-#intro h1 { font-size:48px; font-family:Consolas,monospace; }
-.co { color:black; }
-.doo { color:#00e5ff; }
-@keyframes introFade {0%,80%{opacity:1;}100%{opacity:0; pointer-events:none;}}
-
-/* App container */
-#app { height:100vh; display:flex; flex-direction:column; transform:translateY(-100vh);
-animation:dropIn 0.25s ease-out forwards; animation-delay:3s;}
-@keyframes dropIn{to{transform:translateY(0);}}
-
-/* Top bar */
-.topbar { display:flex; align-items:center; padding:10px 14px; border-bottom:1px solid #222;}
-.logo { font-size:18px; font-family:Consolas,monospace; font-weight:bold;}
-.logo .co { color:black; } .logo .doo { color:#00e5ff; }
-.actions { margin-left:auto; display:flex; gap:8px;}
-.btn { background:#1a1a1a; color:#eaeaea; border:1px solid #333; padding:6px 12px; cursor:pointer;}
-.btn:hover { background:#222;}
-
-/* Editor */
-#editor { flex:1; }
-
-/* Run Panel */
-#runPanel {
-  position:fixed; inset:0; background:white;
-  display:none; flex-direction:column; z-index:20;
-  opacity:0; transition:opacity 0.3s;
+.logo {
+  font-family: Consolas, monospace;
+  font-weight: bold;
+  font-size: 16px;
 }
-#runPanel.show { display:flex; opacity:1; }
-.run-header { background:#111; color:white; padding:8px; display:flex; justify-content:space-between; }
-iframe { flex:1; border:none; }
+.actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  background: #141414;
+  color: #eaeaea;
+  border: 1px solid #2a2a2a;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.btn:hover { background: #1d1d1d; }
 
-/* Menu */
-#menuBtn { background:#1a1a1a; color:white; font-size:20px; border:none; padding:6px 10px; cursor:pointer;}
-#menuBtn:hover{ background:#222; }
+/* ===== MENU ===== */
+#menuBtn {
+  background: #141414;
+  color: #eaeaea;
+  border: 1px solid #2a2a2a;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+#menuBtn:hover { background: #1d1d1d; }
+
 #menu {
-  position:fixed; top:0; left:0; width:250px; height:100%;
-  background:#1a1a1a; display:none; flex-direction:column; padding:10px;
-  overflow-y:auto; z-index:30; gap:10px;
+  position: fixed;
+  top: 48px;
+  left: 0;
+  width: 250px;
+  height: calc(100% - 48px);
+  background: #141414;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 1px solid #222;
+  z-index: 40;
 }
-.menu-header { font-weight:bold; color:#eaeaea; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
-.menu-group { margin-bottom:10px; }
-.menu-group label { font-weight:bold; color:#eaeaea; display:block; margin-bottom:4px; }
+.menu-group { margin-bottom: 10px; }
+.menu-group label { font-weight: bold; color: #eaeaea; display: block; margin-bottom: 4px; }
 .menu-group button {
-  width:100%; padding:6px 8px; margin-bottom:4px;
-  border:none; background:#222; color:white; cursor:pointer; border-radius:4px;
+  width: 100%;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border: none;
+  background: #222;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
 }
-.menu-group button:hover { background:#333; }
+.menu-group button:hover { background: #333; }
 
-/* Template floating panel */
+/* ===== TEMPLATE PANEL ===== */
 #templatePanel {
-  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:80%; max-width:700px; background:#1a1a1a; border:2px solid #222; border-radius:6px;
-  display:none; flex-direction:column; z-index:40; padding:12px; max-height:70%;
-  overflow-y:auto; color:white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 700px;
+  background: #141414;
+  border: 2px solid #222;
+  border-radius: 6px;
+  display: none;
+  flex-direction: column;
+  z-index: 50;
+  padding: 12px;
+  max-height: 70%;
+  overflow-y: auto;
 }
-#templatePanel .panel-header { display:flex; justify-content:space-between; margin-bottom:8px; }
-#templatePanel .panel-header span { font-weight:bold; }
-#templatePanel .panel-header button { cursor:pointer; border:none; background:#222; color:white; padding:4px 8px; border-radius:4px; }
-#templatePanel .templates { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
-#templatePanel .templates button { padding:6px; border:none; border-radius:4px; background:#222; cursor:pointer; color:white; }
-#templatePanel .templates button:hover { background:#333; }
+#templatePanel .panel-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+#templatePanel .panel-header span { font-weight: bold; }
+#templatePanel .panel-header button { cursor: pointer; border: none; background: #222; color: white; padding: 4px 8px; border-radius: 4px; }
+#templatePanel .templates { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; }
+#templatePanel .templates button { padding: 6px; border: none; border-radius: 4px; background: #222; cursor: pointer; color: white; }
+#templatePanel .templates button:hover { background: #333; }
+
+/* ===== EDITOR ===== */
+#editor {
+  height: calc(100vh - 48px);
+}
+
+/* ===== RUN PANEL ===== */
+#runOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+#runOverlay.show { display: flex; }
+#runOverlay.visible { opacity: 1; }
+
+.runPanel {
+  width: 92%;
+  max-width: 900px;
+  height: 80%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.runHeader {
+  background: #111;
+  color: #fff;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+iframe { flex: 1; border: none; }
 </style>
 
 <!-- Monaco Loader -->
 <script src="https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js"></script>
 </head>
+
 <body>
 
-<div id="intro">
-  <h1><span class="co">Co</span><span class="doo">doo</span></h1>
-</div>
-
-<div id="app">
-  <div class="topbar">
-    <button id="menuBtn">&#9776;</button>
-    <div class="logo"><span class="co">Co</span><span class="doo">doo</span></div>
-    <div class="actions">
-      <button class="btn" onclick="copyCode()">Copy</button>
-      <button class="btn" onclick="runCode()">Run</button>
-    </div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <button id="menuBtn">&#9776;</button>
+  <div class="logo">Codoo</div>
+  <div class="actions">
+    <button class="btn" onclick="copyCode()">Copy</button>
+    <button class="btn" onclick="runCode()">Run</button>
   </div>
-  <div id="editor"></div>
 </div>
 
-<div id="runPanel">
-  <div class="run-header">
-    <span>Output</span>
-    <div>
-      <button class="btn" onclick="document.getElementById('runPanel').requestFullscreen()">Fullscreen</button>
-      <button class="btn" onclick="closeRun()">Close</button>
-    </div>
-  </div>
-  <iframe id="output"></iframe>
-</div>
-
+<!-- MENU -->
 <div id="menu">
-  <div class="menu-header"><span>&lt;/&gt;</span> Templates</div>
   <div class="menu-group" id="htmlTemplates">
     <label>HTML</label>
     <button data-snippet="htmlBoiler">Boilerplate</button>
-    <button data-snippet="htmlForm">Forms</button>
+    <button data-snippet="htmlForm">Form</button>
     <button data-snippet="htmlGrid">Grid</button>
     <button data-snippet="htmlButtons">Buttons</button>
     <button data-snippet="htmlTables">Tables</button>
@@ -142,6 +194,7 @@ iframe { flex:1; border:none; }
   </div>
 </div>
 
+<!-- TEMPLATE PANEL -->
 <div id="templatePanel">
   <div class="panel-header">
     <span>Select Template</span>
@@ -150,56 +203,85 @@ iframe { flex:1; border:none; }
   <div class="templates" id="templateButtons"></div>
 </div>
 
+<!-- EDITOR -->
+<div id="editor"></div>
+
+<!-- RUN OVERLAY -->
+<div id="runOverlay">
+  <div class="runPanel">
+    <div class="runHeader">
+      <span>Output</span>
+      <button class="btn" onclick="closeRun()">Close</button>
+    </div>
+    <iframe id="output"></iframe>
+  </div>
+</div>
+
 <script>
 let editor;
 
-// Monaco Editor init
-require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.45.0/min/vs' }});
-require(['vs/editor/editor.main'], function () {
+// Monaco Init
+require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.45.0/min/vs' } });
+require(['vs/editor/editor.main'], () => {
   editor = monaco.editor.create(document.getElementById('editor'), {
-    value: '<!DOCTYPE html>\n<html>\n<body style="background:#111;color:white">\n<h1>Codoo</h1>\n<input placeholder="Type here">\n</body>\n</html>',
+    value: `<!DOCTYPE html>
+<html>
+<body style="background:#111;color:white;font-family:sans-serif">
+
+<h1>Codoo</h1>
+<input placeholder="Type something">
+
+<script>
+document.querySelector("input").oninput = e => console.log(e.target.value);
+<\/script>
+
+</body>
+</html>`,
     language: 'html',
     theme: 'vs-dark',
     automaticLayout: true,
     fontSize: 14,
-    minimap:{enabled:false},
-    wordWrap:'on'
+    minimap: { enabled: false },
+    wordWrap: 'on'
   });
 });
 
-// Run code
+/* ===== RUN ===== */
 function runCode() {
-  const panel = document.getElementById('runPanel');
-  panel.classList.add('show');
+  const overlay = document.getElementById('runOverlay');
+  overlay.classList.add('show');
+  requestAnimationFrame(() => overlay.classList.add('visible'));
   document.getElementById('output').srcdoc = editor.getValue();
 }
+
 function closeRun() {
-  const panel = document.getElementById('runPanel');
-  panel.classList.remove('show');
+  const overlay = document.getElementById('runOverlay');
+  overlay.classList.remove('visible');
+  setTimeout(() => overlay.classList.remove('show'), 1000);
 }
 
-// Copy
+/* ===== COPY ===== */
 function copyCode() { navigator.clipboard.writeText(editor.getValue()); }
 
-// Menu toggle
+/* ===== MENU TOGGLE ===== */
 const menuBtn = document.getElementById('menuBtn');
 const menu = document.getElementById('menu');
-menuBtn.onclick = ()=> menu.style.display = menu.style.display==='flex'?'none':'flex';
+menuBtn.onclick = () => menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
 
-// Template panel
-function openTemplatePanel(buttonsHTML){ 
-  const panel = document.getElementById('templatePanel');
+/* ===== TEMPLATES PANEL ===== */
+const templatePanel = document.getElementById('templatePanel');
+function openTemplatePanel(buttonsHTML) { 
   document.getElementById('templateButtons').innerHTML = buttonsHTML;
-  panel.style.display = 'flex';
+  templatePanel.style.display = 'flex';
 }
-function closeTemplatePanel(){ document.getElementById('templatePanel').style.display='none'; }
+function closeTemplatePanel() { templatePanel.style.display = 'none'; }
 
-// Template buttons click
-document.querySelectorAll('#menu button[data-snippet]').forEach(btn=>{
-  btn.onclick = ()=>{
-    let code='';
+/* ===== TEMPLATE BUTTONS CLICK ===== */
+document.querySelectorAll('#menu button[data-snippet]').forEach(btn => {
+  btn.onclick = () => {
+    let code = '';
     switch(btn.dataset.snippet){
-      case 'htmlBoiler': code='<!DOCTYPE html>\n<html>\n<head>\n <title>Boilerplate</title>\n</head>\n<body>\n <h1>Hello Codoo</h1>\n</body>\n</html>'; break;
+      case 'htmlBoiler': code='<!DOCTYPE html>\n<html>\n<head>\n<title>Boilerplate</title>\n</head>\n<body>\n<h1>Hello Codoo</h1>\n</body>\n</html>'; break;
       case 'htmlForm': code='<form><input placeholder="Name"><button>Submit</button></form>'; break;
       case 'htmlGrid': code='<div style="display:grid;grid-template-columns:1fr 1fr;"><div>A</div><div>B</div></div>'; break;
       case 'htmlButtons': code='<button>Click me</button><button>Another</button>'; break;
@@ -218,7 +300,7 @@ document.querySelectorAll('#menu button[data-snippet]').forEach(btn=>{
     editor.setValue(code);
     menu.style.display='none';
     closeTemplatePanel();
-  }
+  };
 });
 </script>
 
